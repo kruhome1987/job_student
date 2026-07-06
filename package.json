@@ -1,0 +1,10 @@
+{
+  "name": "assignment-tracking-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ระบบติดตามชิ้นงานนักเรียน - Backend เชื่อมต่อ Google Sheets ผ่าน Vercel Serverless Functions",
+  "dependencies": {
+    "google-spreadsheet": "^4.1.4",
+    "google-auth-library": "^9.14.1"
+  }
+}
