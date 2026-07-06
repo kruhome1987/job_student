@@ -1,6 +1,7 @@
 // api/grading-bulk.js
-// POST /api/grading-bulk   body: { assignmentId }
-// -> ตั้งสถานะ "ส่งแล้ว" ให้นักเรียนเป้าหมายทุกคนของชิ้นงานนี้ (ไม่กระทบคะแนนเดิมที่มีอยู่)
+// POST /api/grading-bulk   body: { assignmentId, forceScore }
+// -> ถ้าระบุ forceScore: จะบันทึกคะแนนที่ระบุให้ทุกคน (ทับข้อมูลเดิม)
+// -> ถ้าไม่ระบุ forceScore: ตั้งสถานะ "ส่งแล้ว" ให้คนที่ยังไม่ส่ง (ถืองานเก็บคะแนน จะให้คะแนนเต็มอัตโนมัติ)
 
 const {
   getAssignmentsMetaSheet,
@@ -16,7 +17,7 @@ module.exports = async function handler(req, res) {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { assignmentId } = req.body || {};
+    const { assignmentId, forceScore } = req.body || {};
     if (!assignmentId) return res.status(400).json({ error: 'ต้องระบุ assignmentId' });
 
     const metaSheet = await getAssignmentsMetaSheet();
@@ -28,6 +29,7 @@ module.exports = async function handler(req, res) {
       title: metaRow.get('title'),
       grade: metaRow.get('grade'),
       room: metaRow.get('room'),
+      maxScore: metaRow.get('maxScore') ? Number(metaRow.get('maxScore')) : null,
     };
 
     const studentsSheet = await getStudentsSheet();
@@ -50,11 +52,17 @@ module.exports = async function handler(req, res) {
     for (const stu of targetStudents) {
       const row = await findOrCreateStudentRow(subjectSheet, stu);
       const existingValue = row.get(assignment.title);
-      // ถ้ามีค่าอยู่แล้ว (มีคะแนน หรือทำเครื่องหมายส่งแล้ว) ให้คงค่าเดิมไว้ ไม่ทับ
-      // ถ้ายังว่างอยู่ (ยังไม่ส่ง) ให้ทำเครื่องหมายว่า "ส่งแล้ว"
-      if (!existingValue) {
-        row.set(assignment.title, 'ส่งแล้ว');
-        await row.save();
+      
+      // โลจิกใหม่: ถ้ามีการส่งคะแนนมา (ปุ่มให้คะแนนทุกคน)
+      if (forceScore !== undefined && forceScore !== null) {
+          row.set(assignment.title, String(forceScore));
+          await row.save();
+      } 
+      // โลจิกเดิม: กดปุ่มเช็คส่งทุกคน (ให้เฉพาะคนที่ยังว่าง)
+      else if (!existingValue) {
+          let newValue = assignment.maxScore ? String(assignment.maxScore) : 'ส่งแล้ว';
+          row.set(assignment.title, newValue);
+          await row.save();
       }
     }
 
