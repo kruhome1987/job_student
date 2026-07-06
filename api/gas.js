@@ -4,7 +4,7 @@
 export default async function handler(req, res) {
   // 1. รับลิงก์ Web App จาก Environment Variable ที่ตั้งไว้ใน Vercel
   // หรือถ้ายังไม่ได้ตั้งใน Vercel ให้ใส่ลิงก์ชั่วคราวตรงส่วน String "https://script.google.com/..." ไว้ทดสอบก่อนได้
-  const GAS_URL = process.env.GAS_WEB_APP_URL || "https://script.google.com/macros/s/AKfycbx_YOUR_SCRIPT_ID_HERE/exec";
+  const GAS_URL = process.env.GAS_WEB_APP_URL || "https://script.google.com/macros/s/AKfycbx92km2quxqMeY2lpZiwXn5fUq-0Eg97n88oqOscbyuIXP38oBafB_P4SBrfxJxyq8y/exec";
 
   // 2. อนุญาต CORS ให้หน้าเว็บเรียกใช้งาน API ได้
   res.setHeader('Access-Control-Allow-Credentials', true);
