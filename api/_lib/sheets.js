@@ -18,6 +18,17 @@ const ASSIGNMENTS_HEADERS = [
   'id', 'subject', 'title', 'grade', 'room', 'dueDate', 'maxScore', 'detail', 'created',
 ];
 
+function normalizePrivateKey(rawKey) {
+  let key = (rawKey || '').trim();
+  // เผื่อกรณีคัดลอกมาทั้งเครื่องหมายคำพูดครอบ เช่น "-----BEGIN...-----"
+  if ((key.startsWith('"') && key.endsWith('"')) || (key.startsWith("'") && key.endsWith("'"))) {
+    key = key.slice(1, -1).trim();
+  }
+  // แปลง \r\n เป็น \n (เผื่อคัดลอกจาก Windows) แล้วแปลง \n ที่เป็นตัวอักษรจริง (backslash-n) ให้เป็นขึ้นบรรทัดใหม่จริง
+  key = key.replace(/\\r\\n/g, '\\n').replace(/\r\n/g, '\n').replace(/\\n/g, '\n');
+  return key;
+}
+
 let cachedDoc = null;
 
 /**
@@ -34,9 +45,16 @@ async function getDoc() {
     );
   }
 
+  const privateKey = normalizePrivateKey(GOOGLE_PRIVATE_KEY);
+  if (!privateKey.includes('BEGIN PRIVATE KEY')) {
+    throw new Error(
+      'GOOGLE_PRIVATE_KEY ดูไม่ถูกต้อง (ไม่พบ "BEGIN PRIVATE KEY") กรุณาตรวจสอบว่าคัดลอกค่าจากไฟล์ JSON มาครบและไม่มีเครื่องหมายคำพูดครอบ'
+    );
+  }
+
   const auth = new JWT({
     email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    key: privateKey,
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
 

@@ -45,7 +45,6 @@
 
     <nav class="glass-panel sticky top-0 z-40 px-4 sm:px-8 py-3 shadow-sm border-b border-white/50 flex justify-between items-center">
         <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('student-login')">
-            <!-- โลโก้ครู -->
             <img src="./images/teacher-logo.jpg" alt="Logo" class="w-10 h-10 rounded-full object-cover shadow-md border-2 border-emerald-300 bg-emerald-100" onerror="this.src='https://placehold.co/100x100/10b981/ffffff?text=Logo'">
             <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-yellow-600 hidden sm:block">
                 ระบบจัดการชิ้นงาน
@@ -58,12 +57,9 @@
         </div>
     </nav>
 
-    <!-- ขยายคอนเทนเนอร์ให้เต็มจอ -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative flex flex-col">
 
-        <!-- ======================= -->
-        <!-- STUDENT LOGIN VIEW      -->
-        <!-- ======================= -->
+        <!-- STUDENT LOGIN VIEW -->
         <div id="view-student-login" class="max-w-md mx-auto mt-10 w-full">
             <div class="glass-panel p-8 rounded-3xl shadow-xl border border-white">
                 <div class="text-center mb-8">
@@ -97,9 +93,7 @@
             </div>
         </div>
 
-        <!-- ======================= -->
-        <!-- STUDENT DASHBOARD VIEW  -->
-        <!-- ======================= -->
+        <!-- STUDENT DASHBOARD VIEW -->
         <div id="view-student-dashboard" class="hidden w-full">
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl shadow-sm border border-emerald-100">
                 <div class="flex items-center gap-4">
@@ -145,9 +139,7 @@
             </div>
         </div>
 
-        <!-- ======================= -->
-        <!-- TEACHER LOGIN VIEW      -->
-        <!-- ======================= -->
+        <!-- TEACHER LOGIN VIEW -->
         <div id="view-teacher-login" class="hidden max-w-md mx-auto mt-10 w-full">
             <div class="glass-panel p-8 rounded-3xl shadow-xl border border-white">
                 <div class="text-center mb-8">
@@ -173,13 +165,11 @@
             </div>
         </div>
 
-        <!-- ======================= -->
-        <!-- TEACHER DASHBOARD VIEW  -->
-        <!-- ======================= -->
+        <!-- TEACHER DASHBOARD VIEW -->
         <div id="view-teacher-dashboard" class="hidden w-full flex-1">
             <div class="flex flex-col md:flex-row gap-6 h-full">
                 
-                <!-- Sidebar (Responsive) -->
+                <!-- Sidebar -->
                 <aside class="w-full md:w-64 flex-shrink-0">
                     <div class="glass-panel rounded-3xl p-4 md:sticky md:top-24">
                         <div class="flex items-center gap-3 p-3 mb-2 md:mb-4">
@@ -191,7 +181,6 @@
                         </div>
                         <hr class="border-gray-100 mb-2 md:mb-4">
                         
-                        <!-- Mobile Menu Scrollable Row, Desktop Stack -->
                         <nav class="flex md:flex-col overflow-x-auto md:overflow-visible gap-2 md:space-y-1 pb-2 md:pb-0 scrollbar-hide">
                             <button onclick="switchTeacherTab('overview')" id="tab-btn-overview" class="flex-shrink-0 w-auto md:w-full flex items-center gap-2 md:gap-3 px-4 py-2.5 md:py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition whitespace-nowrap">
                                 <i class="fa-solid fa-chart-pie w-5 text-center"></i> ภาพรวม
@@ -239,26 +228,20 @@
                                 <button onclick="searchIndividualStudent()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm w-full sm:w-auto">ค้นหา</button>
                             </div>
                             
-                            <!-- พื้นที่แสดงผลการค้นหา -->
                             <div id="individual-search-result" class="hidden bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm">
-                                <!-- เนื้อหาจะถูกเติมด้วย JS -->
                             </div>
                         </div>
 
                         <h3 class="text-lg font-bold text-gray-800 mb-3 sm:mb-4">ชิ้นงานล่าสุด</h3>
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <!-- Responsive Table/Card List -->
                             <div class="block w-full">
-                                <!-- Table Header (Hidden on Mobile) -->
                                 <div class="hidden md:grid grid-cols-4 gap-4 p-4 text-xs font-semibold text-gray-700 bg-gray-50 uppercase border-b border-gray-200">
                                     <div class="col-span-1">ชื่องาน</div>
                                     <div class="col-span-1">วิชา</div>
                                     <div class="col-span-1">ชั้น/ห้อง</div>
                                     <div class="col-span-1">กำหนดส่ง</div>
                                 </div>
-                                <!-- Table Body -->
                                 <div id="recent-assignments-table" class="divide-y divide-gray-100 text-sm">
-                                    <!-- Injected via JS -->
                                 </div>
                             </div>
                         </div>
@@ -269,7 +252,6 @@
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 sm:gap-4">
                             <h2 class="text-xl sm:text-2xl font-bold text-gray-800">จัดการชิ้นงาน</h2>
                             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-                                <!-- ฟีเจอร์: ตัวกรองวิชา -->
                                 <select id="filter-subject" onchange="renderAssignmentsTable()" class="px-4 py-2.5 sm:py-2 text-sm rounded-xl border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-emerald-400 outline-none w-full sm:w-auto">
                                     <option value="all">🔍 ทุกวิชา</option>
                                     <option value="คอมพิวเตอร์">คอมพิวเตอร์</option>
@@ -284,7 +266,6 @@
                         </div>
 
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <!-- Responsive Table/Card List for Assignments -->
                             <div class="block w-full">
                                 <div class="hidden md:grid grid-cols-12 gap-4 p-4 text-xs font-semibold text-gray-700 bg-gray-50 uppercase border-b border-gray-200">
                                     <div class="col-span-4">ชื่องาน</div>
@@ -294,7 +275,6 @@
                                     <div class="col-span-2 text-center">จัดการ</div>
                                 </div>
                                 <div id="assignments-table" class="divide-y divide-gray-100 text-sm">
-                                    <!-- Injected via JS (Card format for mobile, Row for Desktop) -->
                                 </div>
                             </div>
                         </div>
@@ -313,7 +293,6 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">เลือกชิ้นงานที่ต้องการตรวจ</label>
                             <select id="grading-assignment-select" onchange="loadStudentsForGrading()" class="w-full px-4 py-3 sm:py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm">
                                 <option value="">-- กรุณาเลือกชิ้นงาน --</option>
-                                <!-- Injected via JS -->
                             </select>
                         </div>
 
@@ -326,23 +305,22 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Bulk Action Button -->
                                 <button onclick="markAllAsDone()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition flex-shrink-0 w-full lg:w-auto flex justify-center items-center gap-2">
                                     <i class="fa-solid fa-check-double"></i> เช็ค "ส่งแล้ว" ทุกคน
                                 </button>
                             </div>
                             
-                            <!-- Responsive Table/Card List for Grading -->
-                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <!-- Responsive Table/Card List for Grading (ปรับ Layout และสี Pastel) -->
+                            <div class="bg-transparent md:bg-white md:rounded-2xl md:shadow-sm md:border border-gray-100 overflow-hidden">
                                 <div class="hidden md:grid grid-cols-12 gap-4 p-4 text-xs font-semibold text-gray-700 bg-gray-50 uppercase border-b border-gray-200">
                                     <div class="col-span-1 text-center">เลขที่</div>
-                                    <div class="col-span-2">รหัส</div>
+                                    <div class="col-span-2 text-center">รหัส</div>
                                     <div class="col-span-4">ชื่อ-นามสกุล</div>
-                                    <div class="col-span-2">สถานะ</div>
+                                    <div class="col-span-2 text-center">สถานะ</div>
                                     <div class="col-span-2 text-center">คะแนน</div>
                                     <div class="col-span-1 text-center">อัปเดต</div>
                                 </div>
-                                <div id="grading-students-table" class="divide-y divide-gray-100">
+                                <div id="grading-students-table" class="divide-y divide-transparent md:divide-gray-100">
                                     <!-- Injected via JS -->
                                 </div>
                             </div>
@@ -353,7 +331,6 @@
                     <div id="tab-students" class="teacher-tab hidden">
                         <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">จัดการนักเรียน</h2>
                         
-                        <!-- นำเข้าข้อมูล -->
                         <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-emerald-100 mb-6">
                             <h3 class="text-sm font-bold text-emerald-800 mb-2"><i class="fa-solid fa-file-import"></i> นำเข้าข้อมูล (Copy จาก Excel)</h3>
                             <p class="text-xs text-gray-500 mb-3">คัดลอกข้อมูลจาก Excel หรือ Google Sheets โดยเรียงคอลัมน์ดังนี้:<br>
@@ -364,7 +341,6 @@
                             </div>
                         </div>
 
-                        <!-- ตัวกรอง -->
                         <div class="flex flex-col sm:flex-row gap-3 mb-4">
                             <select id="filter-stu-grade" onchange="renderStudentsTable()" class="px-4 py-2.5 sm:py-2 text-sm rounded-xl border border-gray-300 bg-white shadow-sm outline-none w-full sm:w-auto">
                                 <option value="all">ทุกระดับชั้น</option>
@@ -378,7 +354,6 @@
                             </select>
                         </div>
 
-                        <!-- Responsive Students List -->
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             <div class="hidden md:grid grid-cols-12 gap-4 p-4 text-xs font-semibold text-gray-700 bg-gray-50 uppercase border-b border-gray-200 sticky top-0 z-10">
                                 <div class="col-span-2">ชั้น/ห้อง</div>
@@ -388,7 +363,6 @@
                                 <div class="col-span-2 text-center">จัดการ</div>
                             </div>
                             <div id="students-manage-table" class="divide-y divide-gray-100 text-sm max-h-[500px] overflow-y-auto">
-                                <!-- Injected via JS -->
                             </div>
                         </div>
                     </div>
@@ -403,11 +377,7 @@
         @2026 ผู้พัฒนาระบบ ว่าที่ร้อยตรีบุญโฮม ตรองติรัมย์
     </footer>
 
-    <!-- ======================= -->
-    <!-- MODALS & TOASTS         -->
-    <!-- ======================= -->
-    
-    <!-- Assignment Add/Edit Modal -->
+    <!-- MODALS & TOASTS -->
     <div id="assignment-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 flex-shrink-0">
@@ -426,7 +396,6 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">วิชา *</label>
-                            <!-- เปลี่ยนเป็น Select เพื่อความคุมง่าย -->
                             <select id="form-subject" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-400 outline-none" required>
                                 <option value="คณิตศาสตร์">คณิตศาสตร์</option>
                                 <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
@@ -474,7 +443,6 @@
 
     <!-- Image Share Modal (สำหรับสร้างรูปภาพ) -->
     <div id="image-share-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-50 flex flex-col items-center justify-center p-4">
-        
         <div class="flex justify-between items-center w-full max-w-sm mb-4">
             <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-image"></i> แจ้งเตือนชิ้นงาน</h3>
             <button onclick="closeShareModal()" class="text-white/70 hover:text-white bg-white/10 rounded-full w-8 h-8 flex justify-center items-center">
@@ -482,7 +450,6 @@
             </button>
         </div>
 
-        <!-- กล่องนี้จะถูกนำไปแคปเจอร์เป็นรูปภาพ -->
         <div id="capture-card" class="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-[340px] relative">
             <div class="pattern-bg p-6 text-center border-b-[6px] border-emerald-500" id="capture-header">
                 <div class="w-16 h-16 bg-white rounded-2xl shadow-sm mx-auto flex justify-center items-center mb-3">
@@ -508,8 +475,8 @@
             </div>
         </div>
 
-        <!-- สำหรับแสดงผลรูปที่แคปเสร็จแล้ว (ให้กดค้างโหลดได้บนมือถือ) -->
-        <img id="result-image" class="hidden rounded-3xl shadow-2xl w-full max-w-[340px]" alt="ชิ้นงาน" />
+        <!-- สำหรับแสดงผลรูปที่แคปเสร็จแล้ว - เพิ่ม CSS ให้กดค้างเซฟรูปบนมือถือได้ -->
+        <img id="result-image" style="-webkit-touch-callout: default !important; pointer-events: auto !important; user-select: auto !important;" class="hidden rounded-3xl shadow-2xl w-full max-w-[340px]" alt="ชิ้นงาน" />
 
         <div class="mt-6 flex flex-col gap-3 w-full max-w-sm">
             <p id="share-hint" class="text-white/80 text-sm text-center hidden">✨ รูปสร้างเสร็จแล้ว! กดค้างที่รูปภาพเพื่อแชร์หรือบันทึกได้เลย</p>
@@ -526,9 +493,6 @@
     </div>
 
     <script>
-        // --- Backend Config ---
-        // ตั้งชื่อโดเมนของ Backend ที่นี่ ถ้า Deploy Frontend กับ API ไว้ใน Vercel Project เดียวกัน
-        // ปล่อยเป็นค่าว่าง '' ได้เลย (จะเรียก /api/... แบบ relative path อัตโนมัติ)
         const API_BASE = '';
 
         async function apiFetch(path, options = {}) {
@@ -544,20 +508,18 @@
             return data;
         }
 
-        // --- State Management ---
         window.appState = {
             currentView: 'student-login',
             currentTeacherTab: 'overview',
             loggedInStudent: null,
-            studentAssignments: [],   // ชิ้นงาน+สถานะของนักเรียนที่ล็อกอินอยู่ (โหลดจาก /api/student-view)
-            currentGrading: null,    // ผลลัพธ์ล่าสุดจาก /api/grading (ใช้ export excel ด้วย)
+            studentAssignments: [],   
+            currentGrading: null,    
             students: [],
             assignments: []
         };
 
         const genId = () => Math.random().toString(36).substr(2, 9);
 
-        // โหลดข้อมูลตั้งต้น (รายชื่อนักเรียน + รายการชิ้นงานทั้งหมด) จาก Backend
         async function loadInitialData() {
             try {
                 const [studentsRes, assignmentsRes] = await Promise.all([
@@ -572,7 +534,6 @@
             }
         }
 
-        // Helpers
         const getSubjectColors = (subject) => {
             switch(subject) {
                 case 'คณิตศาสตร์': return { border: 'border-blue-400', bg: 'bg-blue-50', text: 'text-blue-700', icon: 'fa-calculator' };
@@ -597,7 +558,6 @@
             }, 3000);
         };
 
-        // Navigation
         window.navigateTo = function(viewId) {
             ['student-login', 'student-dashboard', 'teacher-login', 'teacher-dashboard'].forEach(id => {
                 document.getElementById('view-' + id).classList.add('hidden');
@@ -633,7 +593,6 @@
             if(tabId === 'students') renderStudentsTable();
         };
 
-        // --- Student Features ---
         window.handleStudentLogin = async function() {
             const grade = document.getElementById('login-grade').value;
             const studentId = document.getElementById('login-student-id').value.trim();
@@ -714,7 +673,6 @@
             ['total','done','pending','overdue'].forEach(k => document.getElementById(`stat-${k}`).innerText = eval(k));
         };
 
-        // --- Teacher Features ---
         window.handleTeacherLogin = function() {
             if(document.getElementById('login-teacher-pin').value === '1234') {
                 document.getElementById('login-teacher-pin').value = '';
@@ -736,7 +694,6 @@
             sorted.forEach(a => {
                 const due = new Date(a.dueDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
                 tbody.innerHTML += `
-                    <!-- Card on Mobile, Row on Desktop -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition items-center">
                         <div class="col-span-1 font-bold text-gray-800">${a.title}</div>
                         <div class="col-span-1 text-sm"><span class="md:hidden text-gray-400 text-xs">วิชา: </span>${a.subject}</div>
@@ -817,7 +774,6 @@
                 const scoreText = a.maxScore ? `<span class="text-xs text-emerald-600 font-bold ml-2">(เก็บ ${a.maxScore} คะแนน)</span>` : '';
                 
                 tbody.innerHTML += `
-                    <!-- Responsive Card Format -->
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition items-center">
                         <div class="md:col-span-4">
                             <p class="font-bold text-gray-800 text-base md:text-sm">${a.title} ${scoreText}</p>
@@ -908,7 +864,6 @@
             
             const colors = getSubjectColors(a.subject);
             
-            // Populate DOM
             document.getElementById('capture-header').className = `pattern-bg p-6 text-center border-b-[6px] ${colors.border}`;
             document.getElementById('capture-icon').className = `fa-solid ${colors.icon} text-3xl ${colors.text}`;
             document.getElementById('capture-subject').innerText = a.subject;
@@ -919,20 +874,18 @@
             const d = new Date(a.dueDate);
             document.getElementById('capture-due').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            // Reset UI
             document.getElementById('capture-card').classList.remove('hidden');
             document.getElementById('result-image').classList.add('hidden');
             document.getElementById('share-hint').classList.add('hidden');
             document.getElementById('image-share-modal').classList.remove('hidden');
 
-            // Generate Image instantly
             setTimeout(() => {
                 html2canvas(document.getElementById('capture-card'), { scale: 2, backgroundColor: null }).then(canvas => {
                     const imgData = canvas.toDataURL("image/png");
                     const imgEl = document.getElementById('result-image');
                     imgEl.src = imgData;
                     imgEl.classList.remove('hidden');
-                    document.getElementById('capture-card').classList.add('hidden'); // Hide HTML, show Img
+                    document.getElementById('capture-card').classList.add('hidden'); 
                     document.getElementById('share-hint').classList.remove('hidden');
                 });
             }, 300);
@@ -975,7 +928,7 @@
                 showToast('โหลดข้อมูลไม่สำเร็จ: ' + err.message);
                 return;
             }
-            window.appState.currentGrading = data; // เก็บไว้ใช้ตอน export excel
+            window.appState.currentGrading = data; 
 
             document.getElementById('btn-export-excel').classList.remove('hidden');
 
@@ -997,32 +950,65 @@
                     if(isDone) doneCount++; else pendingCount++;
 
                     const scoreInputHtml = a.maxScore 
-                        ? `<div class="flex items-center gap-1 justify-end md:justify-center"><input type="number" id="score-input-${stu.id}" value="${stu.score !== undefined && stu.score !== null ? stu.score : ''}" max="${a.maxScore}" min="0" class="w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-emerald-400 outline-none bg-white text-center"> <span class="text-xs text-gray-500">/${a.maxScore}</span></div>`
-                        : `<span class="text-gray-400 text-xs">-</span>`;
+                        ? `<div class="flex items-center gap-1.5 w-full justify-end md:justify-center"><input type="number" id="score-input-${stu.id}" value="${stu.score !== undefined && stu.score !== null ? stu.score : ''}" max="${a.maxScore}" min="0" class="w-16 px-2 py-2 md:py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-emerald-400 outline-none bg-white text-center shadow-sm"> <span class="text-xs text-gray-500 font-bold">/${a.maxScore}</span></div>`
+                        : `<span class="text-gray-400 text-xs w-full text-right md:text-center block pt-2 md:pt-0">ไม่เก็บคะแนน</span>`;
 
+                    // ==========================================
+                    // โลจิกเลือกสีพาสเทลแยกเพศ ชาย/หญิง (เฉพาะแถวพื้นหลัง)
+                    // ==========================================
+                    let cardBg = '';
+                    const prefix = stu.prefix || '';
+                    const isBoy = prefix.includes('ช') || prefix.includes('ชาย');
+                    const isGirl = prefix.includes('ญ') || prefix.includes('หญิง');
+
+                    if (isDone) {
+                        // ส่งแล้ว: สีเข้มขึ้นนิดนึง
+                        if (isBoy) cardBg = 'bg-blue-100/70 border-blue-200';
+                        else if (isGirl) cardBg = 'bg-rose-100/60 border-rose-200';
+                        else cardBg = 'bg-emerald-100/70 border-emerald-200';
+                    } else {
+                        // ค้างส่ง: สีอ่อนๆ โปร่งแสง
+                        if (isBoy) cardBg = 'bg-blue-50/40 border-blue-100';
+                        else if (isGirl) cardBg = 'bg-rose-50/40 border-rose-100';
+                        else cardBg = 'bg-gray-50 border-gray-200';
+                    }
+
+                    // สร้างรูปแบบ Card สำหรับมือถือ (มีเงา, โค้ง) / รูปแบบ Row แบนๆ สำหรับเดสก์ท็อป
                     tbody.innerHTML += `
-                        <!-- Responsive Card format -->
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 border-b border-gray-100 ${isDone ? 'bg-emerald-50/40' : 'bg-white hover:bg-gray-50'} transition items-center">
-                            <div class="md:col-span-1 text-sm font-medium text-gray-500 flex md:justify-center justify-between"><span class="md:hidden">เลขที่:</span>${stu.no || '-'}</div>
-                            <div class="md:col-span-2 font-mono text-xs text-gray-500 flex md:block justify-between"><span class="md:hidden">รหัส:</span>${stu.id}</div>
-                            <div class="md:col-span-4 font-medium text-gray-800 text-base md:text-sm">
-                                ${stu.prefix}${stu.firstName} ${stu.lastName} ${stu.room ? `<span class="text-xs text-gray-400 ml-1">(${stu.room})</span>` : ''}
+                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 p-4 border ${cardBg} transition items-center rounded-2xl md:rounded-none md:border-x-0 md:border-t-0 md:border-b border-gray-200/60 mb-3 md:mb-0 shadow-sm md:shadow-none">
+                            
+                            <div class="md:col-span-1 flex justify-between items-center md:justify-center">
+                                <span class="font-bold text-gray-700 bg-white/80 px-2.5 py-1 md:py-0.5 rounded-lg text-sm md:text-xs shadow-sm border border-gray-200/50">เลขที่ ${stu.no || '-'}</span>
+                                <span class="md:hidden font-mono text-xs text-gray-500 bg-white/50 px-2.5 py-1 rounded-lg border border-gray-200/50">รหัส: ${stu.id}</span>
                             </div>
-                            <div class="md:col-span-2 flex md:block justify-between items-center">
-                                <span class="md:hidden text-xs text-gray-500">สถานะ:</span>
-                                <select id="status-select-${stu.id}" class="text-sm px-3 py-1.5 border border-gray-300 rounded-lg outline-none w-32 md:w-full ${isDone ? 'bg-emerald-100 text-emerald-800 font-bold border-emerald-200' : 'bg-yellow-50 text-yellow-700 font-bold border-yellow-200'}">
-                                    <option value="pending" ${!isDone ? 'selected' : ''}>⏳ ค้างส่ง</option>
-                                    <option value="done" ${isDone ? 'selected' : ''}>✅ ส่งแล้ว</option>
-                                </select>
+                            
+                            <div class="hidden md:block md:col-span-2 font-mono text-xs text-gray-500 text-center">${stu.id}</div>
+                            
+                            <div class="md:col-span-4 font-bold md:font-medium text-gray-800 text-lg md:text-sm">
+                                ${stu.prefix}${stu.firstName} ${stu.lastName} 
+                                ${stu.room ? `<span class="text-xs text-gray-500 font-normal ml-1">(${stu.room})</span>` : ''}
                             </div>
-                            <div class="md:col-span-2 flex md:block justify-between items-center">
-                                <span class="md:hidden text-xs text-gray-500">คะแนน:</span>
-                                ${scoreInputHtml}
-                            </div>
-                            <div class="md:col-span-1 mt-2 md:mt-0 pt-3 md:pt-0 border-t border-gray-100 md:border-none flex justify-end md:justify-center">
-                                <button onclick="saveSubmission('${assignId}', '${stu.id}')" class="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 md:px-3 md:py-1.5 rounded-lg text-sm md:text-xs font-bold transition shadow-sm w-full md:w-auto">
-                                    บันทึก
-                                </button>
+                            
+                            <!-- พื้นที่จัดการสถานะ/คะแนน/บันทึก (จัดเรียงใหม่บนมือถือให้อยู่บรรทัดเดียวกันได้เยอะขึ้น) -->
+                            <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-3 mt-1 md:mt-0 pt-3 md:pt-0 border-t border-gray-200/60 md:border-none md:col-span-5 w-full">
+                                
+                                <div class="w-[48%] md:w-full md:col-span-2">
+                                    <select id="status-select-${stu.id}" class="text-sm px-2 py-2 md:py-1.5 border border-gray-300 rounded-lg outline-none w-full shadow-sm ${isDone ? 'bg-emerald-100 text-emerald-800 font-bold border-emerald-300' : 'bg-white text-gray-600 font-medium'}">
+                                        <option value="pending" ${!isDone ? 'selected' : ''}>⏳ ค้างส่ง</option>
+                                        <option value="done" ${isDone ? 'selected' : ''}>✅ ส่งแล้ว</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="w-[48%] md:w-full flex items-center justify-end md:col-span-2">
+                                    ${scoreInputHtml}
+                                </div>
+                                
+                                <div class="w-full md:w-auto md:col-span-1 mt-1 md:mt-0">
+                                    <button onclick="saveSubmission('${assignId}', '${stu.id}')" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 md:px-3 md:py-1.5 rounded-lg text-sm md:text-xs font-bold transition shadow-sm w-full md:w-auto flex justify-center items-center">
+                                        บันทึก
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     `;
@@ -1051,11 +1037,16 @@
             }
         };
 
-        // NEW: Bulk check all as done
         window.markAllAsDone = async function() {
             const assignId = document.getElementById('grading-assignment-select').value;
             if(!assignId) return;
-            if(!confirm('คุณต้องการเปลี่ยนสถานะนักเรียนทุกคนในรายการนี้เป็น "ส่งแล้ว" ใช่หรือไม่? (ไม่กระทบคะแนน)')) return;
+            
+            const a = window.appState.currentGrading.assignment;
+            const msg = a.maxScore 
+                ? `คุณต้องการเช็ค "ส่งแล้ว" ให้นักเรียนทุกคนใช่หรือไม่?\n\n(ระบบจะใส่คะแนนเต็ม ${a.maxScore} ให้อัตโนมัติสำหรับคนที่ยังไม่ส่ง โดยไม่กระทบคนที่ตรวจให้คะแนนไปแล้ว)`
+                : `คุณต้องการเช็ค "ส่งแล้ว" ให้นักเรียนทุกคนที่ยังไม่ส่งใช่หรือไม่?`;
+
+            if(!confirm(msg)) return;
 
             try {
                 await apiFetch('/api/grading-bulk', { method: 'POST', body: JSON.stringify({ assignmentId: assignId }) });
@@ -1066,7 +1057,6 @@
             }
         };
 
-        // NEW: Export to Excel
         window.exportToExcel = function() {
             const data = window.appState.currentGrading;
             if(!data) return;
@@ -1075,7 +1065,6 @@
             const targetStudents = [...data.students]
                                          .sort((x, y) => { if(x.room !== y.room) return x.room.localeCompare(y.room); return (parseInt(x.no) || 99) - (parseInt(y.no) || 99); });
 
-            // Prepare Data for Excel
             const exportData = targetStudents.map(stu => {
                 return {
                     "ชั้น": a.grade,
@@ -1088,12 +1077,10 @@
                 };
             });
 
-            // Create Workbook
             const worksheet = XLSX.utils.json_to_sheet(exportData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "ตรวจงาน");
             
-            // Download
             const fileName = `สรุปส่งงาน_${a.subject}_${a.title}_${a.grade}.xlsx`;
             XLSX.writeFile(workbook, fileName);
             showToast('ส่งออกไฟล์ Excel สำเร็จ');
@@ -1119,7 +1106,6 @@
 
             filtered.forEach(s => {
                 tbody.innerHTML += `
-                    <!-- Responsive Card Format -->
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition items-center">
                         <div class="md:col-span-2 font-bold text-emerald-700 bg-emerald-50/50 p-2 md:p-1 rounded md:bg-transparent md:text-left flex justify-between md:block"><span class="md:hidden text-gray-500 font-normal">ชั้น/ห้อง:</span>${s.grade}/${s.room}</div>
                         <div class="md:col-span-2 text-gray-500 flex justify-between md:justify-center"><span class="md:hidden text-gray-500">เลขที่:</span>${s.no || '-'}</div>
@@ -1179,7 +1165,6 @@
             }
         };
 
-        // Initialize App: โหลดข้อมูลจาก Backend (Google Sheets) ตอนเปิดหน้าเว็บ
         loadInitialData();
         
     </script>

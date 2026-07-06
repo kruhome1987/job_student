@@ -29,9 +29,6 @@ async function loadAssignmentMeta(assignmentId) {
 }
 
 // ตัดสินสถานะ/คะแนนจากค่าที่เก็บในเซลล์ของชีตรายวิชา
-// - เซลล์ว่าง                          -> ยังไม่ส่ง (pending)
-// - เซลล์เป็นตัวเลข                    -> ส่งแล้ว พร้อมคะแนน
-// - เซลล์เป็นข้อความ (เช่น "ส่งแล้ว")   -> ส่งแล้ว แต่ไม่มีคะแนน
 function parseCellValue(rawValue) {
   if (rawValue === undefined || rawValue === null || rawValue === '') {
     return { status: 'pending', score: null };
@@ -104,19 +101,24 @@ module.exports = async function handler(req, res) {
       const subjectSheet = await getOrCreateSubjectSheet(assignment.subject);
       await subjectSheet.loadHeaderRow();
       if (!subjectSheet.headerValues.includes(assignment.title)) {
-        // เผื่อกรณีคอลัมน์ยังไม่ถูกสร้าง (เช่นข้อมูลเก่า) ให้สร้างให้ตอนนี้เลย
         const { appendAssignmentColumn } = require('./_lib/sheets');
         await appendAssignmentColumn(assignment.subject, assignment.title);
       }
 
       const row = await findOrCreateStudentRow(subjectSheet, student);
 
+      // โลจิกใหม่สำหรับการบันทึกคะแนน
       let cellValue = '';
       if (status === 'done') {
-        // ถ้ามีคะแนนส่งมา ให้เก็บตัวเลขคะแนน ถ้าไม่มีคะแนน (เช่น งานไม่เก็บคะแนน หรือยังไม่ให้คะแนน)
-        // ให้เก็บคำว่า "ส่งแล้ว" แทน เพื่อไม่ให้เซลล์ว่าง (ว่าง = ยังไม่ส่ง)
-        cellValue = (score !== null && score !== undefined && score !== '') ? String(score) : 'ส่งแล้ว';
+        if (assignment.maxScore) {
+            // กรณีเป็นงานเก็บคะแนน: ถ้าครูใส่คะแนนให้บันทึกตัวเลข ถ้าไม่ใส่(ว่างเปล่า) ให้ถือว่าเป็น 0 
+            cellValue = (score !== null && score !== undefined && score !== '') ? String(score) : '0';
+        } else {
+            // กรณีเป็นงานไม่เก็บคะแนน: บันทึกข้อความลง Sheet 
+            cellValue = 'ส่งแล้ว';
+        }
       }
+      
       row.set(assignment.title, cellValue);
       await row.save();
 
