@@ -450,7 +450,8 @@
             </button>
         </div>
 
-        <div id="capture-card" class="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-[340px] relative">
+        <!-- ปรับแต่งจุดนี้: ผลัก element ไปซ่อนนอกจอด้วยพิกัด แทนการใช้ hidden เพื่อให้ html2canvas สแกน element ได้แม่นยำ 100% -->
+        <div id="capture-card" class="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-[340px] absolute -top-[9999px] -left-[9999px]">
             <div class="pattern-bg p-6 text-center border-b-[6px] border-emerald-500" id="capture-header">
                 <div class="w-16 h-16 bg-white rounded-2xl shadow-sm mx-auto flex justify-center items-center mb-3">
                     <i class="fa-solid fa-bell text-3xl text-emerald-500" id="capture-icon"></i>
@@ -475,13 +476,13 @@
             </div>
         </div>
 
-        <!-- สำหรับแสดงผลรูปที่แคปเสร็จแล้ว - เพิ่ม CSS ให้กดค้างเซฟรูปบนมือถือได้ -->
-        <img id="result-image" style="-webkit-touch-callout: default !important; pointer-events: auto !important; user-select: auto !important;" class="hidden rounded-3xl shadow-2xl w-full max-w-[340px]" alt="ชิ้นงาน" />
+        <!-- แท็กรูปภาพผลลัพธ์: ปรับปรุง inline style ให้เปิดสิทธิ์ pointer-events เต็มรูปแบบเพื่อให้กดเซฟค้างบนโทรศัพท์ได้ -->
+        <img id="result-image" style="-webkit-touch-callout: default !important; pointer-events: auto !important; user-select: auto !important; display: block;" class="hidden rounded-3xl shadow-2xl w-full max-w-[340px] max-h-[60vh] object-contain" alt="ชิ้นงาน" />
 
         <div class="mt-6 flex flex-col gap-3 w-full max-w-sm">
             <p id="share-hint" class="text-white/80 text-sm text-center hidden">✨ รูปสร้างเสร็จแล้ว! กดค้างที่รูปภาพเพื่อแชร์หรือบันทึกได้เลย</p>
             <button id="btn-download-img" onclick="downloadGeneratedImage()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition">
-                <i class="fa-solid fa-download mr-2"></i> บันทึกลงเครื่อง
+                <i class="fa-solid fa-download mr-2"></i> บันทึกลงเครื่อง (สำหรับคอมพิวเตอร์)
             </button>
         </div>
     </div>
@@ -537,9 +538,9 @@
         const getSubjectColors = (subject) => {
             switch(subject) {
                 case 'คณิตศาสตร์': return { border: 'border-blue-400', bg: 'bg-blue-50', text: 'text-blue-700', icon: 'fa-calculator' };
-                case 'วิทยาศาสตร์': return { border: 'border-emerald-400', bg: 'bg-emerald-50', text: 'text-emerald-700', icon: 'fa-flask' };
+                case 'คอมพิวเตอร์': return { border: 'border-emerald-400', bg: 'bg-emerald-50', text: 'text-emerald-700', icon: 'fa-flask' };
                 case 'ภาษาไทย': return { border: 'border-rose-400', bg: 'bg-rose-50', text: 'text-rose-700', icon: 'fa-language' };
-                case 'ภาษาอังกฤษ': return { border: 'border-amber-400', bg: 'bg-amber-50', text: 'text-amber-700', icon: 'fa-a' };
+                case 'วิทยาการคำนวณ': return { border: 'border-amber-400', bg: 'bg-amber-50', text: 'text-amber-700', icon: 'fa-a' };
                 case 'สังคมศึกษา': return { border: 'border-orange-400', bg: 'bg-orange-50', text: 'text-orange-700', icon: 'fa-globe' };
                 default: return { border: 'border-gray-400', bg: 'bg-gray-100', text: 'text-gray-700', icon: 'fa-book' };
             }
