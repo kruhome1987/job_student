@@ -859,50 +859,195 @@
             }
         };
 
-        window.openShareModal = function(id) {
-            const a = window.appState.assignments.find(x => x.id === id);
-            if(!a) return;
-            
-            const colors = getSubjectColors(a.subject);
-            
-            document.getElementById('capture-header').className = `pattern-bg p-6 text-center border-b-[6px] ${colors.border}`;
-            document.getElementById('capture-icon').className = `fa-solid ${colors.icon} text-3xl ${colors.text}`;
-            document.getElementById('capture-subject').innerText = a.subject;
-            document.getElementById('capture-title').innerText = a.title;
-            document.getElementById('capture-target').innerText = `${a.grade} ${a.room === 'ทั้งหมด' ? '(ทุกห้อง)' : 'ห้อง '+a.room}`;
-            document.getElementById('capture-score').innerText = a.maxScore ? `${a.maxScore} คะแนน` : 'ไม่เก็บคะแนน';
-            
-            const d = new Date(a.dueDate);
-            document.getElementById('capture-due').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+        window.openShareModal = async function(id) {
+    const a = window.appState.assignments.find(x => x.id === id);
+    if (!a) return;
+    
+    // แสดงกล่องโหลดสถานะด้วย SweetAlert2 ระหว่างคำนวณและเจนรูปภาพ
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({ 
+            title: 'กำลังสร้างรูปภาพแจ้งเตือน...', 
+            allowOutsideClick: false, 
+            didOpen: () => Swal.showLoading() 
+        });
+    } else {
+        showToast('กำลังประมวลผลรูปภาพ...');
+    }
 
-            document.getElementById('capture-card').classList.remove('hidden');
-            document.getElementById('result-image').classList.add('hidden');
-            document.getElementById('share-hint').classList.add('hidden');
-            document.getElementById('image-share-modal').classList.remove('hidden');
+    // 1. สร้าง Container จำลอง (Off-screen Div) สำหรับเรนเดอร์รูปภาพสรุปความละเอียดสูง (1080x1920px)
+    const exportContainer = document.createElement('div');
+    exportContainer.style.position = 'fixed';
+    exportContainer.style.top = '-9999px';
+    exportContainer.style.left = '-9999px';
+    exportContainer.style.zIndex = '-9999';
 
-            setTimeout(() => {
-                html2canvas(document.getElementById('capture-card'), { scale: 2, backgroundColor: null }).then(canvas => {
-                    const imgData = canvas.toDataURL("image/png");
-                    const imgEl = document.getElementById('result-image');
-                    imgEl.src = imgData;
-                    imgEl.classList.remove('hidden');
-                    document.getElementById('capture-card').classList.add('hidden'); 
-                    document.getElementById('share-hint').classList.remove('hidden');
-                });
-            }, 300);
-        };
+    const d = new Date(a.dueDate);
+    // แปลงการแสดงผลปีเป็น พ.ศ. 2569 ตามระบบของคุณครู
+    const dateStr = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        window.closeShareModal = function() { document.getElementById('image-share-modal').classList.add('hidden'); };
+    // กำหนดสีหลักและไอคอนตามประเภทรายวิชา
+    let mainColor = '#10b981'; 
+    let iconClass = 'fa-calculator';
+    if (a.subject === 'คณิตศาสตร์') { mainColor = '#3b82f6'; iconClass = 'fa-calculator'; }
+    else if (a.subject === 'วิทยาศาสตร์') { mainColor = '#10b981'; iconClass = 'fa-flask'; }
+    else if (a.subject === 'ภาษาไทย') { mainColor = '#f43f5e'; iconClass = 'fa-language'; }
+    else if (a.subject === 'ภาษาอังกฤษ') { mainColor = '#f59e0b'; iconClass = 'fa-font'; }
+    else if (a.subject === 'สังคมศึกษา') { mainColor = '#ea580c'; iconClass = 'fa-globe'; }
+
+    // 2. จัดโครงสร้าง HTML และ CSS (inline style) สำหรับการ์ดชิ้นงานความละเอียดสูง (ขนาด 1080x1920px)
+    exportContainer.innerHTML = `
+        <div style="background: #f8fafc; font-family: 'Kanit', sans-serif; display: flex; flex-direction: column; width: 1080px; min-height: 1920px; box-sizing: border-box; padding: 40px;">
+            
+            <div style="background: white; border-radius: 60px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); border: 4px solid #e2e8f0; overflow: hidden; display: flex; flex-direction: column; flex: 1;">
+                
+                <!-- ส่วนหัวการ์ด (Header Background Pattern) -->
+                <div style="background-color: #ffffff; background-image: radial-gradient(${mainColor} 2px, transparent 2px); background-size: 40px 40px; padding: 100px 60px; text-align: center; border-bottom: 12px solid ${mainColor};">
+                    <div style="background: white; width: 220px; height: 220px; border-radius: 50px; margin: 0 auto 40px auto; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <i class="fa-solid ${iconClass}" style="font-size: 110px; color: ${mainColor};"></i>
+                    </div>
+                    <p style="font-size: 40px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 4px; margin: 0 0 20px 0;">ระบบติดตามชิ้นงานนักเรียน</p>
+                    <h1 style="font-size: 70px; font-weight: 900; color: #1e293b; margin: 0; line-height: 1.3;">วิชา ${a.subject}</h1>
+                </div>
+
+                <!-- รายละเอียดชิ้นงาน -->
+                <div style="padding: 80px 70px; display: flex; flex-direction: column; gap: 50px; flex: 1; justify-content: center;">
+                    
+                    <div style="background: #f1f5f9; border-radius: 40px; padding: 50px; border-left: 15px solid ${mainColor};">
+                        <p style="font-size: 35px; color: #64748b; margin: 0 0 15px 0; font-weight: 500;">📌 ชื่องาน / กิจกรรมที่ต้องส่ง</p>
+                        <h2 style="font-size: 55px; font-weight: 700; color: #0f172a; margin: 0;">${a.title}</h2>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 40px 20px; border-bottom: 3px solid #f1f5f9;">
+                        <span style="font-size: 40px; color: #64748b; font-weight: 500;"><i class="fa-solid fa-graduation-cap"></i> ระดับชั้น / ห้องเรียน</span>
+                        <span style="font-size: 45px; font-weight: 700; color: #1e293b;">ชั้น ${a.grade} ${a.room === 'ทั้งหมด' ? '(ทุกห้องเรียน)' : 'ห้อง ' + a.room}</span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 40px 20px; border-bottom: 3px solid #f1f5f9;">
+                        <span style="font-size: 40px; color: #64748b; font-weight: 500;"><i class="fa-solid fa-star"></i> ค่าคะแนนชิ้นงาน</span>
+                        <span style="font-size: 45px; font-weight: 700; color: ${a.maxScore ? '#10b981' : '#64748b'}; background: ${a.maxScore ? '#dcfce7' : '#f1f5f9'}; padding: 15px 35px; border-radius: 20px;">
+                            ${a.maxScore ? a.maxScore + ' คะแนน' : 'ไม่เก็บคะแนน'}
+                        </span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 40px 20px; border-bottom: 3px solid #f1f5f9;">
+                        <span style="font-size: 40px; color: #64748b; font-weight: 500;"><i class="fa-solid fa-calendar-days"></i> กำหนดส่งงาน</span>
+                        <span style="font-size: 45px; font-weight: 800; color: #ef4444; background: #fee2e2; padding: 15px 35px; border-radius: 20px;">
+                            ${dateStr}
+                        </span>
+                    </div>
+
+                    ${a.detail ? `
+                    <div style="background: #fffbeb; border: 2px dashed #fef08a; border-radius: 40px; padding: 40px; margin-top: 20px;">
+                        <p style="font-size: 35px; color: #b45309; font-weight: 700; margin: 0 0 15px 0;"><i class="fa-solid fa-circle-info"></i> รายละเอียดคำชี้แจงเพิ่มเติม:</p>
+                        <p style="font-size: 35px; color: #451a03; margin: 0; line-height: 1.6;">${a.detail}</p>
+                    </div>` : ''}
+
+                    <div style="text-align: center; margin-top: auto; padding-top: 60px;">
+                        <p style="font-size: 30px; color: #94a3b8; font-weight: 500; margin: 0;">
+                            🌐 นักเรียนสามารถตรวจสอบงานค้างส่งรายบุคคลได้ที่ลิงก์ระบบจัดการชิ้นงาน โรงเรียนวัดแสงสรรค์
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ส่วนท้ายแผ่นการ์ด (Footer) -->
+                <div style="background: #f1f5f9; padding: 40px; text-align: center; font-size: 30px; color: #64748b; font-weight: 500; border-top: 2px solid #e2e8f0;">
+                    <i class="fa-solid fa-user-tie"></i> ออกระบบแจ้งเตือนโดย: คุณครูผู้สอน • โรงเรียนวัดแสงสรรค์
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(exportContainer);
+
+    try {
+        // 3. ใช้ html2canvas ประมวลผลจากกล่องจำลองภายนอกหน้าจอ
+        const canvas = await html2canvas(exportContainer, { 
+            scale: 1, 
+            backgroundColor: '#f8fafc',
+            useCORS: true,       
+            allowTaint: true 
+        });
         
-        window.downloadGeneratedImage = function() {
-            const imgData = document.getElementById('result-image').src;
-            if(!imgData || imgData.includes('transparent')) return;
-            const link = document.createElement('a');
-            link.download = `แจ้งชิ้นงาน_${new Date().getTime()}.png`;
-            link.href = imgData;
-            link.click();
-            showToast('บันทึกรูปภาพสำเร็จ');
-        };
+        const imgData = canvas.toDataURL('image/jpeg', 0.90);
+        document.body.removeChild(exportContainer); 
+
+        // 4. แสดงผลลัพธ์ผ่าน SweetAlert2 ร่วมกับระบบแชร์และดาวน์โหลดไฟล์โดยตรง
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'สร้างรูปภาพชิ้นงานสำเร็จ',
+                html: `
+                    <div class="text-center mb-3">
+                        <span class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-2 max-w-[280px] mx-auto">
+                            <i class="fa-solid fa-hand-pointer fa-bounce"></i> กดค้างที่รูปภาพเพื่อบันทึกหรือแชร์ลง LINE
+                        </span>
+                    </div>
+                    
+                    <div class="flex justify-center mb-4 max-h-[45vh] overflow-y-auto bg-gray-100 rounded-xl p-2 border border-gray-200 relative">
+                        <img src="${imgData}" style="-webkit-touch-callout: default; pointer-events: auto;" class="w-auto h-auto max-h-[380px] object-contain rounded-lg shadow-sm border border-gray-300">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="btnShareAssignImage" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-2 rounded-xl transition shadow-sm flex flex-col items-center justify-center gap-1">
+                            <i class="fa-solid fa-share-nodes text-lg"></i>
+                            <span class="text-xs">กดแชร์ทันที</span>
+                        </button>
+                        <a href="${imgData}" download="แจ้งเตือนชิ้นงาน_${a.subject}_${a.title}.jpg" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-2 rounded-xl transition shadow-sm flex flex-col items-center justify-center gap-1 text-center no-underline">
+                            <i class="fa-solid fa-download text-lg"></i>
+                            <span class="text-xs">บันทึกลงเครื่อง</span>
+                        </a>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2.5">*หากเปิดในแอป LINE ปุ่มกดแชร์อาจถูกจำกัดสิทธิ์ คุณครูสามารถใช้นิ้วกดค้างที่รูปภาพเพื่อส่งต่อได้ครับ</p>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: { popup: 'rounded-3xl' },
+                didOpen: () => {
+                    // 5. ดักจับปุ่มกดแชร์เพื่อเรียกใช้งาน Web Share API บนระบบมือถือ
+                    document.getElementById('btnShareAssignImage').addEventListener('click', async function() {
+                        try {
+                            const originalBtnHTML = this.innerHTML;
+                            this.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i><span class="text-xs">กำลังเตรียม...</span>';
+                            
+                            const res = await fetch(imgData);
+                            const blob = await res.blob();
+                            const file = new File([blob], `แจ้งเตือนงาน_${a.subject}.jpg`, { type: 'image/jpeg' });
+                            
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                await navigator.share({
+                                    files: [file],
+                                    title: `แจ้งเตือนชิ้นงาน วิชา ${a.subject}`,
+                                    text: `รายละเอียด: ${a.title} (กำหนดส่ง ${dateStr})`
+                                });
+                                this.innerHTML = originalBtnHTML;
+                            } else {
+                                this.innerHTML = originalBtnHTML;
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'แอปนี้บล็อกปุ่มแชร์',
+                                    html: '<p class="text-gray-700 text-sm leading-relaxed">เบราว์เซอร์ของแอปที่คุณกำลังใช้งาน (เช่น LINE In-App Browser) ไม่รองรับคำสั่งแชร์ของระบบมือถือครับ<br><br>👉 แนะนำให้คุณครู <b>"ใช้นิ้วกดค้างที่รูปภาพ"</b> ด้านบน แล้วเลือกเมนูบันทึกหรือส่งต่อไปยังห้องแชทได้โดยตรงเลยครับ</p>',
+                                    confirmButtonText: 'รับทราบ',
+                                    confirmButtonColor: '#10b981'
+                                });
+                            }
+                        } catch (error) {
+                            this.innerHTML = '<i class="fa-solid fa-share-nodes text-lg"></i><span class="text-xs">กดแชร์ทันที</span>';
+                            console.error('Share failure:', error);
+                        }
+                    });
+                }
+            });
+        }
+
+    } catch (error) {
+        if (document.body.contains(exportContainer)) document.body.removeChild(exportContainer);
+        console.error('Image processing failure:', error);
+        showToast('ไม่สามารถประมวลผลจัดรูปการ์ดชิ้นงานได้');
+    }
+};
+
+window.downloadGeneratedImage = function() {
+    // ถูกยุบรวมและผูกคำสั่งเข้ากับหน้าต่างควบคุมหลักของ SweetAlert2 เรียบร้อยแล้ว
+};
 
         window.populateGradingSelect = function() {
             const select = document.getElementById('grading-assignment-select');
